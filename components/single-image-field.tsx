@@ -43,6 +43,7 @@ const SingleImageField: React.FC<BasePropertyProps> = (props) => {
       accept={custom.accept ?? DEFAULT_ACCEPT}
       maxFileSizeBytes={custom.maxFileSizeBytes ?? DEFAULT_MAX_FILE_SIZE_BYTES}
       crop={custom.crop ?? {}}
+      library={!!custom.library}
     />
   );
 };

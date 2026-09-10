@@ -14,6 +14,8 @@ export interface SingleImageFieldOverride {
   accept?: string[];
   maxFileSizeBytes?: number;
   crop?: CropConfig | false;
+  /** Offer a "Choose from library" button (needs `createMediaFeature` mounted). */
+  library?: boolean;
 }
 
 export interface SingleImageFeatureOptions {
@@ -24,6 +26,8 @@ export interface SingleImageFeatureOptions {
   accept?: string[];
   maxFileSizeBytes?: number;
   crop?: CropConfig | false;
+  /** Offer a "Choose from library" button on every listed property. */
+  library?: boolean;
 }
 
 let registeredComponent: string | null = null;
@@ -59,6 +63,7 @@ export const singleImageFeature = (options: SingleImageFeatureOptions) => {
     accept: options.accept ?? DEFAULT_ACCEPT,
     maxFileSizeBytes: options.maxFileSizeBytes ?? DEFAULT_MAX_FILE_SIZE_BYTES,
     crop: options.crop ?? {},
+    library: options.library ?? false,
   };
 
   return (resourceOptions: Record<string, any> = {}): Record<string, any> => {
@@ -82,6 +87,7 @@ export const singleImageFeature = (options: SingleImageFeatureOptions) => {
           accept: override.accept ?? base.accept,
           maxFileSizeBytes: override.maxFileSizeBytes ?? base.maxFileSizeBytes,
           crop: override.crop ?? base.crop,
+          library: override.library ?? base.library,
         },
       };
     }

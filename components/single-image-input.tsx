@@ -11,8 +11,10 @@ import {
   isAcceptedMime,
   type CropConfig,
 } from '../shared.js';
+import type { MediaItemDTO } from '../media/types.js';
 import { deleteStored, uploadBlob } from './uploader.js';
 import { CropModal } from './crop-modal.js';
+import { MediaModal } from './media-modal.js';
 
 const Frame = styled.div<{ $active: boolean; $disabled: boolean }>`
   display: flex;
@@ -71,6 +73,8 @@ export interface SingleImageInputProps {
   disabled?: boolean;
   label?: string;
   hint?: string;
+  /** Show a "Choose from library" button (needs `createMediaFeature` mounted). */
+  library?: boolean;
 }
 
 /**
@@ -90,10 +94,12 @@ export const SingleImageInput: React.FC<SingleImageInputProps> = ({
   disabled = false,
   label,
   hint,
+  library = false,
 }) => {
   const [progress, setProgress] = React.useState<number | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [pendingSrc, setPendingSrc] = React.useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = React.useState(false);
   const lastKeyRef = React.useRef<string | null>(null);
   const pendingFileRef = React.useRef<File | null>(null);
 
@@ -150,6 +156,17 @@ export const SingleImageInput: React.FC<SingleImageInputProps> = ({
     onChange('');
   };
 
+  const pickFromLibrary = (items: MediaItemDTO[]): void => {
+    setPickerOpen(false);
+    const picked = items[0];
+    if (!picked) return;
+    // The previously uploaded file was owned by this field; the library file is not.
+    if (lastKeyRef.current && deletePath) deleteStored(deletePath, lastKeyRef.current);
+    lastKeyRef.current = null;
+    setError(null);
+    onChange(picked.url);
+  };
+
   return (
     <Box marginBottom="lg">
       {label && <Label>{label}</Label>}
@@ -173,30 +190,47 @@ export const SingleImageInput: React.FC<SingleImageInputProps> = ({
           {hint && <div style={{ marginTop: 4 }}>{hint}</div>}
           {progress !== null && <div style={{ marginTop: 6 }}>Uploading {Math.round(progress * 100)}%…</div>}
           {error && <ErrorText>{error}</ErrorText>}
-          {value && !disabled && progress === null && (
+          {!disabled && progress === null && (library || value) && (
             <Row>
-              <Button
-                type="button"
-                size="sm"
-                variant="light"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  dropzone.open();
-                }}
-              >
-                Replace
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="danger"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  remove();
-                }}
-              >
-                Remove
-              </Button>
+              {library && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="light"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setPickerOpen(true);
+                  }}
+                >
+                  Choose from library
+                </Button>
+              )}
+              {value && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="light"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    dropzone.open();
+                  }}
+                >
+                  Replace
+                </Button>
+              )}
+              {value && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="danger"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    remove();
+                  }}
+                >
+                  Remove
+                </Button>
+              )}
             </Row>
           )}
         </Body>
@@ -217,6 +251,14 @@ export const SingleImageInput: React.FC<SingleImageInputProps> = ({
             setPendingSrc(null);
             send(blob, pendingFileRef.current?.name ?? 'image');
           }}
+        />
+      )}
+
+      {pickerOpen && (
+        <MediaModal
+          multiple={false}
+          onClose={() => setPickerOpen(false)}
+          onConfirm={pickFromLibrary}
         />
       )}
     </Box>

@@ -17,6 +17,8 @@ export interface MultiFileFieldOverride {
   maxFiles?: number;
   maxFileSizeBytes?: number;
   crop?: CropConfig | false;
+  /** Offer a "Choose from library" button (needs `createMediaFeature` mounted). */
+  library?: boolean;
 }
 
 export interface MultiFileUploadFeatureOptions {
@@ -35,6 +37,8 @@ export interface MultiFileUploadFeatureOptions {
   maxFileSizeBytes?: number;
   /** Crop-before-upload config, or `false` to disable cropping. Default `{}`. */
   crop?: CropConfig | false;
+  /** Offer a "Choose from library" button on every listed property. */
+  library?: boolean;
 }
 
 let registered: { edit: string; show: string } | null = null;
@@ -72,6 +76,7 @@ export const multiFileUploadFeature = (options: MultiFileUploadFeatureOptions) =
     maxFiles: options.maxFiles ?? DEFAULT_MAX_FILES,
     maxFileSizeBytes: options.maxFileSizeBytes ?? DEFAULT_MAX_FILE_SIZE_BYTES,
     crop: options.crop ?? {},
+    library: options.library ?? false,
   };
 
   return (resourceOptions: Record<string, any> = {}): Record<string, any> => {
@@ -96,6 +101,7 @@ export const multiFileUploadFeature = (options: MultiFileUploadFeatureOptions) =
           maxFiles: override.maxFiles ?? base.maxFiles,
           maxFileSizeBytes: override.maxFileSizeBytes ?? base.maxFileSizeBytes,
           crop: override.crop ?? base.crop,
+          library: override.library ?? base.library,
         },
       };
     }

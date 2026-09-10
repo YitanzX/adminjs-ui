@@ -118,7 +118,14 @@ createResource(MyEntity, { /* options */ }, [
 
 `properties` accepts either `['gallery', 'banners']` (shared defaults) or a
 `{ name: overrides }` map. Overrides: `uploadPath`, `deletePath`, `accept`,
-`maxFiles`, `maxFileSizeBytes`, `crop` (`{ aspect?, circular? }` or `false`).
+`maxFiles`, `maxFileSizeBytes`, `crop` (`{ aspect?, circular? }` or `false`),
+`library`.
+
+Set `library: true` (feature-wide or per property) to add a **Choose from
+library** button beside the dropzone — it opens the Media Library picker so the
+editor can reuse an existing file instead of uploading a new one. Needs
+`createMediaFeature` mounted; picked files are referenced by URL and are never
+deleted from storage by the field.
 
 ### 3. Entity column
 
@@ -134,6 +141,7 @@ Read it back with `parseFileList(row.gallery)`.
 One image, value stored as a **plain URL string** (not JSON).
 
 - **In a resource** — `singleImageFeature({ componentLoader, properties: ['logo'], crop: false })`.
+  Add `library: true` for a **Choose from library** button (needs `createMediaFeature`).
 - **In a custom AdminJS page** — import the raw component:
 
   ```tsx
@@ -194,7 +202,9 @@ app.use('/admin/adminjs-ui/upload', adminSessionGuard(),
 ```
 
 Options: `pageName` / `label` / `icon`, `canAccess(admin)` (default: super admins
-only), `uploadPath`, `brandingDefaults`, `uploadDefaults`. Surfacing the page in
+only), `uploadPath`, `library` (Choose-from-library button on the logo/favicon
+pickers — defaults to `true` when the Media Library is installed via
+`installAdminJsUi`), `brandingDefaults`, `uploadDefaults`. Surfacing the page in
 a custom sidebar is the host's job (an AdminJS page lives at
 `/<rootPath>/pages/<pageName>`).
 

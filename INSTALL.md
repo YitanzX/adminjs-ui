@@ -279,8 +279,8 @@ Every piece is exported on its own:
 
 - `createSettingsFeature({ componentLoader, store, storageFor })` → `{ pages, router, resolveBranding, resolveUploadConfig }`
 - `createMediaFeature({ componentLoader, store, resolveConfig })` → `{ pages, router, field }`
-- `multiFileUploadFeature({ componentLoader, properties })` — multi-file field, value = JSON `StoredFile[]`
-- `singleImageFeature({ componentLoader, properties })` — one-image field, value = URL string
+- `multiFileUploadFeature({ componentLoader, properties })` — multi-file field, value = JSON `StoredFile[]`; `library: true` adds a "Choose from library" button
+- `singleImageFeature({ componentLoader, properties })` — one-image field, value = URL string; `library: true` adds a "Choose from library" button
 - `SingleImageInput` — the raw one-image React component for custom pages
 - `createUploadRouter({ resolveConfig | storage, onStored? })` — the upload endpoint
 - Stores: `typeormSettingsStore`, `jsonFileSettingsStore`, `memorySettingsStore`, `typeormMediaStore`, `memoryMediaStore`

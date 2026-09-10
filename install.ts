@@ -23,6 +23,11 @@ export interface SettingsInstallConfig {
   uploadDefaults?: UploadDefaults;
   /** Extra static `BrandingOptions` merged into the computed branding. */
   extendBranding?: Record<string, any>;
+  /**
+   * Let the logo/favicon pickers choose from the Media Library.
+   * Defaults to `true` when the Media Library is enabled.
+   */
+  library?: boolean;
   pageName?: string;
   label?: string;
   icon?: string;
@@ -120,6 +125,7 @@ export const installAdminJsUi = (opts: InstallAdminJsUiOptions): AdminJsUi => {
           store: settingsCfg.store ?? typeormSettingsStore(dataSource),
           storageFor,
           uploadPath,
+          library: settingsCfg.library ?? (opts.media !== false),
           brandingDefaults: settingsCfg.brandingDefaults,
           uploadDefaults: settingsCfg.uploadDefaults,
           extendBranding: settingsCfg.extendBranding,

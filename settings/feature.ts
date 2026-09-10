@@ -34,6 +34,8 @@ export interface CreateSettingsFeatureOptions {
   storageFor?: (kind: UploadStorageKind) => StorageAdapter;
   /** Endpoint the image widgets upload to. Default `/admin/adminjs-ui/upload`. */
   uploadPath?: string;
+  /** Let the logo/favicon pickers choose from the Media Library (needs `createMediaFeature` mounted). */
+  library?: boolean;
   /** AdminJS page key + chrome. */
   pageName?: string;
   label?: string;
@@ -62,6 +64,7 @@ export const createSettingsFeature = (options: CreateSettingsFeatureOptions): Se
     store,
     extendBranding = {},
     uploadPath = DEFAULT_UPLOAD_PATH,
+    library = false,
     pageName = 'settings',
     label = 'Settings',
     icon = 'Settings',
@@ -93,6 +96,7 @@ export const createSettingsFeature = (options: CreateSettingsFeatureOptions): Se
     settings: await effective(),
     defaults: { ...defaults },
     uploadPath,
+    library,
   });
 
   // --- AdminJS page ---------------------------------------------------------

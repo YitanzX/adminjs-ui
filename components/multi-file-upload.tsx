@@ -16,8 +16,10 @@ import {
   type CropConfig,
   type StoredFile,
 } from '../shared.js';
+import type { MediaItemDTO } from '../media/types.js';
 import { deleteStored, uploadBlob, type UploadHandle } from './uploader.js';
 import { CropModal } from './crop-modal.js';
+import { MediaModal } from './media-modal.js';
 
 interface PendingItem {
   id: string;
@@ -143,6 +145,7 @@ const MultiFileUpload: React.FC<BasePropertyProps> = (props) => {
   const maxFiles: number = custom.maxFiles ?? DEFAULT_MAX_FILES;
   const maxFileSizeBytes: number = custom.maxFileSizeBytes ?? DEFAULT_MAX_FILE_SIZE_BYTES;
   const cropConfig: CropConfig | false = custom.crop ?? {};
+  const library: boolean = !!custom.library;
 
   const [value, setValue] = React.useState<StoredFile[]>(() =>
     parseFileList(record?.params?.[property.path]),
@@ -150,6 +153,7 @@ const MultiFileUpload: React.FC<BasePropertyProps> = (props) => {
   const [pending, setPending] = React.useState<PendingItem[]>([]);
   const [cropId, setCropId] = React.useState<string | null>(null);
   const [notice, setNotice] = React.useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = React.useState(false);
 
   const pendingRef = React.useRef(pending);
   pendingRef.current = pending;
@@ -259,6 +263,34 @@ const MultiFileUpload: React.FC<BasePropertyProps> = (props) => {
     if (removed?.key) deleteStored(deletePath, removed.key);
   };
 
+  const addFromLibrary = (items: MediaItemDTO[]): void => {
+    setPickerOpen(false);
+    const room = slotsLeft();
+    if (room <= 0) {
+      setNotice(`You can attach at most ${maxFiles} file(s).`);
+      return;
+    }
+    const additions: StoredFile[] = items
+      .filter((item) => !value.some((file) => file.url === item.url))
+      .slice(0, room)
+      .map((item) => ({
+        url: item.url,
+        // Empty key: the file belongs to the library, so this field never deletes it.
+        key: '',
+        name: item.name,
+        size: item.size,
+        mime: item.mime,
+        width: item.width ?? undefined,
+        height: item.height ?? undefined,
+      }));
+    if (!additions.length) {
+      setNotice(null);
+      return;
+    }
+    emit([...value, ...additions]);
+    setNotice(items.length > additions.length ? `Only ${additions.length} added — ${maxFiles} file limit.` : null);
+  };
+
   const readOnly = !onChange;
   const cropTarget = pending.find((item) => item.id === cropId);
   const readyCount = pending.filter((item) => item.status === 'ready' || item.status === 'error').length;
@@ -281,6 +313,20 @@ const MultiFileUpload: React.FC<BasePropertyProps> = (props) => {
             {accept.join(', ')} · up to {formatBytes(maxFileSizeBytes)} · {value.length + pending.length}/{maxFiles}
           </div>
         </Dropzone>
+      )}
+
+      {!readOnly && library && (
+        <Box marginTop="default">
+          <Button
+            type="button"
+            size="sm"
+            variant="light"
+            disabled={slotsLeft() <= 0}
+            onClick={() => setPickerOpen(true)}
+          >
+            Choose from library
+          </Button>
+        </Box>
       )}
 
       {notice && <ErrorText>{notice}</ErrorText>}
@@ -351,6 +397,10 @@ const MultiFileUpload: React.FC<BasePropertyProps> = (props) => {
           onCancel={() => setCropId(null)}
           onConfirm={applyCrop}
         />
+      )}
+
+      {pickerOpen && (
+        <MediaModal multiple onClose={() => setPickerOpen(false)} onConfirm={addFromLibrary} />
       )}
     </Box>
   );

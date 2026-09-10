@@ -45,6 +45,7 @@ const SettingsPage: React.FC = () => {
   const [form, setForm] = React.useState<SettingsMap>({});
   const [defaults, setDefaults] = React.useState<SettingsMap>({});
   const [uploadPath, setUploadPath] = React.useState<string>(DEFAULT_UPLOAD_PATH);
+  const [library, setLibrary] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
   const [forbidden, setForbidden] = React.useState(false);
@@ -66,6 +67,7 @@ const SettingsPage: React.FC = () => {
         setForm(body.settings ?? {});
         setDefaults(body.defaults ?? {});
         setUploadPath(body.uploadPath ?? DEFAULT_UPLOAD_PATH);
+        setLibrary(!!body.library);
       } catch {
         if (alive) setNotice({ type: 'error', text: 'Could not load settings.' });
       } finally {
@@ -136,6 +138,7 @@ const SettingsPage: React.FC = () => {
           onChange={(url) => set('branding.logo', url)}
           uploadPath={uploadPath}
           crop={false}
+          library={library}
           hint={defaults['branding.logo'] ? `Leave empty to use ${defaults['branding.logo']}.` : 'Leave empty for text only.'}
         />
 
@@ -145,6 +148,7 @@ const SettingsPage: React.FC = () => {
           onChange={(url) => set('branding.favicon', url)}
           uploadPath={uploadPath}
           crop={false}
+          library={library}
           hint="Small square PNG or ICO."
         />
 
