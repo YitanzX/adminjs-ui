@@ -2,6 +2,7 @@ import express, { Router } from 'express';
 import type { Request } from 'express';
 import type { ComponentLoader, PageHandler } from 'adminjs';
 
+import { componentPath } from '../component-path.js';
 import { DEFAULT_UPLOAD_PATH, SETTINGS_API_PATH } from '../shared.js';
 import { base64StorageAdapter } from '../storage/base64.js';
 import type { StorageAdapter } from '../storage/index.js';
@@ -80,7 +81,7 @@ export const createSettingsFeature = (options: CreateSettingsFeatureOptions): Se
     });
 
   if (!registeredComponent) {
-    registeredComponent = componentLoader.add('AdminjsUiSettingsPage', '../components/settings-page.tsx');
+    registeredComponent = componentLoader.add('AdminjsUiSettingsPage', componentPath('settings-page.tsx'));
   }
   const component = registeredComponent;
 

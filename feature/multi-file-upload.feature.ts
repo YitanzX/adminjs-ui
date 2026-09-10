@@ -1,5 +1,6 @@
 import type { ComponentLoader } from 'adminjs';
 
+import { componentPath } from '../component-path.js';
 import {
   DEFAULT_ACCEPT,
   DEFAULT_MAX_FILES,
@@ -41,8 +42,8 @@ let registered: { edit: string; show: string } | null = null;
 const registerComponents = (componentLoader: ComponentLoader): { edit: string; show: string } => {
   if (!registered) {
     registered = {
-      edit: componentLoader.add('AdminjsUiMultiFileUpload', '../components/multi-file-upload.tsx'),
-      show: componentLoader.add('AdminjsUiFilePreviewList', '../components/file-preview-list.tsx'),
+      edit: componentLoader.add('AdminjsUiMultiFileUpload', componentPath('multi-file-upload.tsx')),
+      show: componentLoader.add('AdminjsUiFilePreviewList', componentPath('file-preview-list.tsx')),
     };
   }
   return registered;

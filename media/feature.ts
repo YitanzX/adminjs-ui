@@ -2,6 +2,7 @@ import express, { Router } from 'express';
 import type { Request } from 'express';
 import type { ComponentLoader, PageHandler } from 'adminjs';
 
+import { componentPath } from '../component-path.js';
 import { adminSessionGuard } from '../server/session-guard.js';
 import { createUploadRouter, type ResolvedUploadConfig } from '../server/upload-router.js';
 import { MEDIA_API_PATH, MEDIA_UPLOAD_PATH, type MediaKind } from './types.js';
@@ -49,10 +50,10 @@ export const createMediaFeature = (options: CreateMediaFeatureOptions): MediaFea
   } = options;
 
   if (!pageComponent) {
-    pageComponent = componentLoader.add('AdminjsUiMediaLibrary', '../components/media-library.tsx');
+    pageComponent = componentLoader.add('AdminjsUiMediaLibrary', componentPath('media-library.tsx'));
   }
   if (!fieldComponent) {
-    fieldComponent = componentLoader.add('AdminjsUiMediaField', '../components/media-field.tsx');
+    fieldComponent = componentLoader.add('AdminjsUiMediaField', componentPath('media-field.tsx'));
   }
 
   const guard = (req: Request, res: any, next: any): void => {

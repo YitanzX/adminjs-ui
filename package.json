@@ -1,6 +1,6 @@
 {
   "name": "@yitanz/adminjs-ui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "WordPress-style Media Library, a visual Settings page and image-upload field widgets for AdminJS 7.",
   "keywords": [
     "adminjs",
@@ -14,7 +14,10 @@
   "type": "module",
   "license": "MIT",
   "author": "yitanz",
-  "repository": "github:yitanz/adminjs-ui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yitanz/adminjs-ui.git"
+  },
   "engines": {
     "node": ">=18"
   },

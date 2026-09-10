@@ -1,5 +1,6 @@
 import type { ComponentLoader } from 'adminjs';
 
+import { componentPath } from '../component-path.js';
 import {
   DEFAULT_ACCEPT,
   DEFAULT_MAX_FILE_SIZE_BYTES,
@@ -31,7 +32,7 @@ const registerComponent = (componentLoader: ComponentLoader): string => {
   if (!registeredComponent) {
     registeredComponent = componentLoader.add(
       'AdminjsUiSingleImageField',
-      '../components/single-image-field.tsx',
+      componentPath('single-image-field.tsx'),
     );
   }
   return registeredComponent;
