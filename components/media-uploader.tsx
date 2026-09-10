@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
-import styled from '@adminjs/design-system/styled-components';
+import { styled } from '@adminjs/design-system/styled-components';
 
 import { MEDIA_UPLOAD_PATH, type MediaItemDTO } from '../media/types.js';
 import { uploadBlob } from './uploader.js';

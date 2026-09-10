@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from '@adminjs/design-system/styled-components';
+import { styled } from '@adminjs/design-system/styled-components';
 import { Box, Button, Label } from '@adminjs/design-system';
 
 import type { MediaItemDTO } from '../media/types.js';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
-import styled from '@adminjs/design-system/styled-components';
+import { styled } from '@adminjs/design-system/styled-components';
 import { Box, Button, Label } from '@adminjs/design-system';
 import type { BasePropertyProps } from 'adminjs';
 

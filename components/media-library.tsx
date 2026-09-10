@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from '@adminjs/design-system/styled-components';
+import { styled } from '@adminjs/design-system/styled-components';
 import { Box, Button, H4, Input, Label } from '@adminjs/design-system';
 
 import { formatBytes } from '../shared.js';
