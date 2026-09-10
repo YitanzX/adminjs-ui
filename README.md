@@ -1,14 +1,19 @@
 # @yitanz/adminjs-ui
 
-Customizable field widgets for **AdminJS 7**. Lives inside the CMS for now
-(`src/adminjs-ui/`) and is meant to be extracted into its own published package
-once the API settles — **it is not on npm yet**, so it is consumed by copying
-this folder (see INSTALL.md).
+Customizable field widgets for **AdminJS 7** — a WordPress-style Media Library, a
+self-contained visual Settings page, and drag-and-drop image/file upload fields.
+
+Published on npm as [`@yitanz/adminjs-ui`](https://www.npmjs.com/package/@yitanz/adminjs-ui):
+
+```bash
+npm install @yitanz/adminjs-ui
+```
+
+The API is still pre-1.0 and may change between `0.1.x` releases.
 
 ## Install (one call)
 
-Full step-by-step for a clean AdminJS app, including how to vendor it while it is
-unpublished: **[INSTALL.md](./INSTALL.md)**.
+Full step-by-step for a clean AdminJS app: **[INSTALL.md](./INSTALL.md)**.
 
 `installAdminJsUi` wires the Settings page, the Media Library, the upload
 endpoint and dynamic branding in one go. The host keeps **three mechanical
@@ -41,8 +46,8 @@ return ui.applyOptions({ rootPath: '/admin', resources, pages: { ...myPages } })
 ui.mount(app);
 ```
 
-Sidebar (only if you override `SidebarResourceSection` yourself, as this CMS
-does): append `adminJsUiNavLinks({ currentAdmin, location, navigate })`.
+Sidebar (only if you override `SidebarResourceSection` yourself): append
+`adminJsUiNavLinks({ currentAdmin, location, navigate })`.
 
 Disable a part with `settings: false` / `media: false`. Everything is also
 usable piecemeal — see `createSettingsFeature`, `createMediaFeature`,
@@ -61,13 +66,13 @@ usable piecemeal — see `createSettingsFeature`, `createMediaFeature`,
 | `entities.ts` | server | `ADMINJS_UI_ENTITIES` — TypeORM classes to spread into your DataSource. |
 | `settings/` | both | Self-contained Settings page — schema (pure), pluggable `SettingsStore`, `createSettingsFeature`. |
 | `media/` | both | WordPress-style Media Library — types (pure), pluggable `MediaStore`, `createMediaFeature`. |
-| `tests/` | node | The library's own tests. Run in isolation: `npm run test:adminjs-ui`. |
+| `tests/` | node | The library's own tests (`npm test` — 19 tests, no DB needed). |
 | `index.ts` | server | Public entry point. |
 
 The **only** distribution trick: AdminJS compiles component files from the
-filesystem into its own browser bundle, so the feature passes **paths**
-(`componentLoader.add('Name', '../components/x.tsx')`) — never a direct import.
-That keeps `index.ts` node-safe.
+filesystem into its own browser bundle, so the feature factories pass **paths**
+to `componentLoader.add()` (resolved to absolute via `component-path.ts`) — never
+a direct import. That keeps `index.ts` node-safe.
 
 ## Multi-file upload + crop
 
@@ -78,7 +83,7 @@ with a plain text column.
 ### 1. Mount the upload route (once)
 
 ```ts
-import { adminSessionGuard, createUploadRouter, base64StorageAdapter } from '../adminjs-ui/index.js';
+import { adminSessionGuard, createUploadRouter, base64StorageAdapter } from '@yitanz/adminjs-ui';
 
 app.use(
   '/admin/adminjs-ui/upload',
@@ -87,7 +92,8 @@ app.use(
 );
 ```
 
-Already wired in [`src/http/routes/index.ts`](../http/routes/index.ts).
+`installAdminJsUi` already mounts this route for you; do it by hand only when
+wiring the pieces à la carte.
 
 Storage options:
 
@@ -101,8 +107,8 @@ Storage options:
 ### 2. Add the feature to a resource
 
 ```ts
-import componentLoader from '../component-loader.js';
-import { multiFileUploadFeature } from '../../adminjs-ui/index.js';
+import componentLoader from './component-loader.js';
+import { multiFileUploadFeature } from '@yitanz/adminjs-ui';
 
 createResource(MyEntity, { /* options */ }, [
   multiFileUploadFeature({
@@ -145,7 +151,7 @@ One image, value stored as a **plain URL string** (not JSON).
 - **In a custom AdminJS page** — import the raw component:
 
   ```tsx
-  import { SingleImageInput } from '../adminjs-ui/components/single-image-input.js';
+  import { SingleImageInput } from '@yitanz/adminjs-ui/components/single-image-input.js';
 
   <SingleImageInput
     label="Logo"
