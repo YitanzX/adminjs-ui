@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactCrop, { centerCrop, makeAspectCrop } from 'react-image-crop';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from '@adminjs/design-system/styled-components';
 import { Button } from '@adminjs/design-system';
 
 import type { CropConfig } from '../shared.js';

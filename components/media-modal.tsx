@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@adminjs/design-system/styled-components';
 import { Box, Button, Input } from '@adminjs/design-system';
 
 import { type MediaItemDTO, type MediaKind } from '../media/types.js';

@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@adminjs/design-system/styled-components';
 
 import { mediaKindOf, type MediaItemDTO } from '../media/types.js';
 
